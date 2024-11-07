@@ -30,16 +30,20 @@ else
     exit 1
 fi
 
-if [ "$REPOSITORY_SSH" = 'none' ]; then
+log_info "Cloning app..."
+git clone $APP_SSH /var/www/repository
+
+if [ "$API_SSH" = 'none' ]; then
     cd /var/www
     log_info "Creating laravel project..."
     composer create-project laravel/laravel repository
 else
-    log_info "Cloning repository..."
-    git clone $REPOSITORY_SSH /var/www/repository
+    log_info "Cloning api..."
+    git clone $API_SSH /var/www/api
 fi
-log_success "Repository cloned."
-cd /var/www/repository
+
+log_success "Api cloned."
+cd /var/www/api
 
 # Instalando depedências
 log_info "Running composer install/update..."
@@ -91,8 +95,7 @@ git config --global --add safe.directory /var/www/repository
 log_success "Git configured."
 
 log_success "Entrypoint finished."
-git checkout .
-
+# git checkout .
 
 
 # Executa qualquer comando que tenha sido fornecido via docker-compose ou linha de comando

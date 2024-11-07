@@ -1,6 +1,6 @@
 services:
-    app:
-        container_name: 'app'
+    api:
+        container_name: 'api'
         build:
             context: .
             dockerfile: Dockerfile
@@ -9,7 +9,7 @@ services:
         volumes:
             - ./:/var/www
         networks:
-            - laravel-11
+            - beatflow-proxy
         healthcheck:
             test: ["CMD", "php", "-r", "file_exists('/var/www/repository/artisan') || exit(1);"]
             interval: 1m
@@ -26,9 +26,9 @@ services:
         ports:
             - "${NGINX_PORT}:80"
         depends_on:
-            - app
+            - api
         networks:
-            - laravel-11
+            - beatflow-proxy
         healthcheck:
             test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
             interval: 1m
@@ -47,7 +47,7 @@ services:
         volumes:
             - ./.docker/dbdata:/var/lib/mysql
         networks:
-            - laravel-11
+            - beatflow-proxy
         healthcheck:
             test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
             interval: 30s
@@ -68,33 +68,14 @@ services:
         depends_on:
             - db
         networks:
-            - laravel-11
+            - beatflow-proxy
         healthcheck:
             test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
             interval: 1m
             timeout: 10s
             retries: 3
 
-    queue:
-        container_name: 'queue'
-        build:
-            context: .
-            dockerfile: Dockerfile
-        restart: always
-        command: "php artisan queue:work"
-        volumes:
-            - ./:/var/www
-        depends_on:
-            - app
-        networks:
-            - laravel-11
-        healthcheck:
-            test: ["CMD", "php", "-r", "file_exists('/var/www/repository/artisan') || exit(1);"]
-            interval: 1m
-            timeout: 10s
-            retries: 3
-
 networks:
-    laravel-11:
-        name: Laravel
+    beatflow-proxy:
+        name: beatflow-proxy
         driver: bridge

@@ -36,8 +36,8 @@ RUN chmod 600 /root/.ssh/id_rsa && \
 WORKDIR /var/www
 
 RUN chmod -R 777 /var/www
-RUN mkdir -p /var/www/repository
-RUN chown -R www-data:www-data /var/www/repository
+RUN mkdir -p /var/www/api
+RUN chown -R www-data:www-data /var/www/api
 
 # Copiar o entrypoint para o container
 COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
