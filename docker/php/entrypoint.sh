@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Reinicia a execução quando algum erro acontece
-echo "Running entrypoint"
+echo "Running php entrypoint"
 # set -e
 
 log_info() {
@@ -30,19 +30,10 @@ else
     exit 1
 fi
 
-log_info "Cloning app..."
-git clone $APP_SSH /var/www/repository
-
-if [ "$API_SSH" = 'none' ]; then
-    cd /var/www
-    log_info "Creating laravel project..."
-    composer create-project laravel/laravel repository
-else
-    log_info "Cloning api..."
-    git clone $API_SSH /var/www/api
-fi
-
+log_info "Cloning api..."
+git clone $API_SSH /var/www/api
 log_success "Api cloned."
+
 cd /var/www/api
 
 # Instalando depedências

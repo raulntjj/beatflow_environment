@@ -27,7 +27,6 @@ RUN pecl install -o -f redis \
     &&  rm -rf /tmp/pear \
     &&  docker-php-ext-enable redis
 
-# Adiciona a chave SSH e configura permissões
 COPY /docker/id_rsa /root/.ssh/id_rsa
 RUN chmod 600 /root/.ssh/id_rsa && \
     ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts && \
@@ -39,14 +38,10 @@ RUN chmod -R 777 /var/www
 RUN mkdir -p /var/www/api
 RUN chown -R www-data:www-data /var/www/api
 
-# Copiar o entrypoint para o container
-COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY ./docker/php/entrypoint.sh /usr/local/bin/entrypoint_php.sh
 
-# Dar permissão de execução ao entrypoint
-RUN chmod +x /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint_php.sh
 
-# Definir o entrypoint do container
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint_php.sh"]
 
-# Comando padrão, o php-fpm
 CMD ["php-fpm"]

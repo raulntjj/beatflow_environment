@@ -34,3 +34,11 @@ if lsof -Pi :$NGINX_PORT -sTCP:LISTEN -t >/dev/null ; then
   exit 1
 fi
 log_success "Port $NGINX_PORT ready for NGINX connection"
+
+
+# Verificando se a porta NGINX_está ocupada
+if lsof -Pi :$APP_PORT -sTCP:LISTEN -t >/dev/null ; then
+ log_info "Port $APP_PORT is in use, stop the process occupying it or change the port."
+  exit 1
+fi
+log_success "Port $APP_PORT ready for APP connection"

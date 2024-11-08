@@ -3,7 +3,7 @@ services:
         container_name: 'api'
         build:
             context: .
-            dockerfile: Dockerfile
+            dockerfile: ./docker/php/Dockerfile
         restart: always
         working_dir: /var/www/
         volumes:
@@ -12,6 +12,26 @@ services:
             - beatflow-proxy
         healthcheck:
             test: ["CMD", "php", "-r", "file_exists('/var/www/repository/artisan') || exit(1);"]
+            interval: 1m
+            timeout: 10s
+            retries: 3
+    app:
+        container_name: 'app'
+        build:
+            context: .
+            dockerfile: ./docker/node/Dockerfile
+        environment:
+            - APP_SSH=git@github.com:raulntjj/beatflow-app.git
+        volumes:
+            - ./app:/var/www/app
+        ports:
+            - "${APP_PORT}:3000"
+        depends_on:
+            - api
+        networks:
+            - beatflow-proxy
+        healthcheck:
+            test: ["CMD-SHELL", "curl -f http://localhost:3000 || exit 1"]
             interval: 1m
             timeout: 10s
             retries: 3
@@ -79,3 +99,4 @@ networks:
     beatflow-proxy:
         name: beatflow-proxy
         driver: bridge
+        # external: true

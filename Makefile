@@ -4,22 +4,22 @@ build:
 	- chmod +x ./docker/build.sh
 	- ./docker/build.sh
 	- docker compose $(ENV_FILE) up -d
-	- docker compose $(ENV_FILE) logs api -f
-
+	- docker compose --env-file $(ENV_FILE) logs -f
+	
 kill:
-	- docker stop api nginx db myadmin
-	- docker rm api nginx db myadmin
+	- docker stop api app nginx db myadmin
+	- docker rm api app nginx db myadmin
 	- docker system prune -af --volumes
-	- rm -r repository .docker
+	- rm -r app api .docker
 
 start:
-	- docker start api nginx db myadmin
+	- docker start api app nginx db myadmin
 
 stop:
-	- docker stop api nginx db myadmin
+	- docker stop api app nginx db myadmin
 
 restart:
-	- docker restart api nginx db myadmin
+	- docker restart api app nginx db myadmin
 
 logs:
 	- docker compose $(ENV_FILE) logs -f
@@ -35,6 +35,9 @@ clean:
 
 down:
 	- docker compose $(ENV_FILE) down
+
+up:
+	- docker compose $(ENV_FILE) up -d --build
 
 reset: 
 	- docker compose $(ENV_FILE) down --volumes --remove-orphans
