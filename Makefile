@@ -4,7 +4,7 @@ build:
 	- chmod +x ./docker/build.sh
 	- ./docker/build.sh
 	- docker compose $(ENV_FILE) up -d
-	- docker compose --env-file $(ENV_FILE) logs -f
+	- docker compose $(ENV_FILE) logs -f api app
 	
 kill:
 	- docker stop api app nginx db myadmin
