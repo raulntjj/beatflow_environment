@@ -73,6 +73,8 @@ sed -i "/^DB_USERNAME=/c\DB_USERNAME=root" .env
 sed -i "/^DB_PASSWORD=/c\DB_PASSWORD=${DB_PASS}" .env
 
 php artisan migrate --force
+php artisan db:seed
+php artisan jwt:secret
 
 # Seta permissões para alterações no projeto
 log_info "Setting permissions..."
