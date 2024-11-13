@@ -49,6 +49,10 @@ fi
 php artisan key:generate --force
 log_success "Key generated."
 
+log_info "Generating JWT Secret..."
+php artisan jwt:secret
+log_success "Secret generated."
+
 # Aguardando MYSQL iniciar
 log_info "Waiting for MYSQL to start..."
 sleep 30
@@ -73,8 +77,11 @@ sed -i "/^DB_USERNAME=/c\DB_USERNAME=root" .env
 sed -i "/^DB_PASSWORD=/c\DB_PASSWORD=${DB_PASS}" .env
 
 php artisan migrate --force
+log_info "Migrations have been run."
+
+log_info "Running seeds..."
 php artisan db:seed
-php artisan jwt:secret
+log_info "Seeds have been run."
 
 # Seta permissões para alterações no projeto
 log_info "Setting permissions..."
